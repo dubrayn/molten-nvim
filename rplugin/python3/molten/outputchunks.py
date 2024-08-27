@@ -261,12 +261,22 @@ def to_outputchunk(
         return _to_image_chunk(path)
 
     def _from_latex(tex: str) -> OutputChunk:
-        from pnglatex import pnglatex
+        # from pnglatex import pnglatex
+        from sympy import preview
 
         try:
             with alloc_file("png", "w") as (path, _):
                 pass
-            pnglatex(tex, path)
+            preview(tex,
+                    viewer='file',
+                    filename=path,
+                    dvioptions=["-D",
+                                "200",
+                                "-fg",
+                                "White",
+                                "-bg",
+                                "Transparent"])
+
             return _to_image_chunk(path)
         except ValueError:
             notify_error(nvim, f"pnglatex was unable to render image from LaTeX: {tex}")
